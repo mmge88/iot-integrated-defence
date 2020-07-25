@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Excluded files
+.idea/
+.vscode/
+.settings/
+PaxHeader/
+doc/
+.project
+.pydevproject
