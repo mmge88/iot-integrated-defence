@@ -12,7 +12,7 @@ import RandomShufflingOptimization
 from Plots import *
 
 output_path = "path_to_result_folder"
-processor_num = 10
+processor_num = "number_of_processes"
 
 #-------------------------------------------------------------------------------------------------------
 # Vary parameter values
@@ -243,19 +243,19 @@ if __name__ == '__main__':
     initial_net, decoy_net, decoy_list, initial_info = beforeShuffle(node_vlan_list, varyDecoyNodes(), varyAttackIntelligence(), 
                                                                      varySSL(), varySSLDecrease())
     
-    interval = 120.0 #For fixed interval
+    interval = 24.0 #For fixed interval
     mean = 24.0 #For random interval
     pro = 0.5 #For random shuffling algorithm
     sim = 100
     delay = 120.0 #For fixed interval in hybrid shuffling
-    out_degree_ratio = 0.2
+    out_degree_ratio = 1.0
     scale = 2 #Set the number for real IoT devices (thermostat, meter, camera, tv, laptop)
     
     start = time.time()
 
     #randomShuffling(node_vlan_list, initial_net, decoy_net, decoy_list, initial_info, interval, pro, sim, varyPacket())
     
-    #heuShuffling(node_vlan_list, initial_net, decoy_net, decoy_list, initial_info, interval, pro, sim, varyPacket(), delay, out_degree_ratio)
+    heuShuffling(node_vlan_list, initial_net, decoy_net, decoy_list, initial_info, interval, pro, sim, varyPacket(), delay, out_degree_ratio)
     
     # GA shuffling using multiprocessing
     #fixedInterval(node_vlan_list, initial_net, decoy_net, decoy_list, initial_info, interval, pro, sim, varyPacket())
@@ -263,9 +263,11 @@ if __name__ == '__main__':
     #adaptiveInterval(node_vlan_list, initial_net, decoy_net, decoy_list, initial_info, pro, sim, varyPacket())
     #hybridInterval(node_vlan_list, initial_net, decoy_net, decoy_list, initial_info, pro, delay, sim, varyPacket())
     
+    
+    #noDefence(initial_net, initial_info, sim)
     end = time.time()
     print("time: ", end - start)
-    #noDefence(initial_net, initial_info, sim)
+    
     
     """
     Scalability analysis

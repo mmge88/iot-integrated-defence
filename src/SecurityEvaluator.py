@@ -73,7 +73,8 @@ def computeMTTSF(harm, net, cflag):
                 if node.val > 0 and node.comp == False:
                     MTTC, count, flag = computeNodeMTTC(node) 
                     MTTSF += MTTC
-                    totalCount += count
+                    if node.type == True:
+                        totalCount += count
                     #print(float(totalCount/totalNo))
                     
                     if float(totalCount/totalNo) >= cflag or flag == True:
@@ -183,8 +184,10 @@ def computeSSL_Interval(harm, net, decoy_net, thre_check, cflag, detect_pro, w1,
                 if node.val > 0 and node.comp == False:
                     #Simulate attacker's behavior
                     MTTC, flag = computeCompNodes(node, detect_pro) 
-                    compNodes.append(node)
-                    assignCompNodeInNet(decoy_net, node)
+                    if node.type == True:
+                        compNodes.append(node)
+                        assignCompNodeInNet(decoy_net, node)
+                        
                     totalTime += MTTC
                     
                     #print("SF1: ", float(len(compNodes)/totalNo))
@@ -244,9 +247,9 @@ def computeSSL_FixedInterval(harm, net, decoy_net, thre_check, cflag, detect_pro
                     #print("Accumulated MTTC:", totalTime)
                     
                     if totalTime < delay:
-                    
-                        compNodes.append(node)
-                        assignCompNodeInNet(decoy_net, node)
+                        if node.type == True:
+                            compNodes.append(node)
+                            assignCompNodeInNet(decoy_net, node)
                     
                         #print("SF1: ", float(len(compNodes)/totalNo))
                         #print("SF2: ", flag)
@@ -264,8 +267,9 @@ def computeSSL_FixedInterval(harm, net, decoy_net, thre_check, cflag, detect_pro
                             break_flag = True
                             break
                     elif totalTime == delay:
-                        compNodes.append(node)
-                        assignCompNodeInNet(decoy_net, node)
+                        if node.type == True:
+                            compNodes.append(node)
+                            assignCompNodeInNet(decoy_net, node)
                         break_flag = True
                         
                         #print("SF1: ", float(len(compNodes)/totalNo))
@@ -304,6 +308,50 @@ def computeSSL_FixedInterval(harm, net, decoy_net, thre_check, cflag, detect_pro
     #print("SSL:", SSL)
     return SSL, totalTime, compNodes, decoy_net
 
+def computeMTTSF_Baseline(harm, net, attack_net, cflag, detect_pro, compNodes):
+    """
+    Compute system security level for baseline scheme.
+    """
+    totalNo = len(net.nodes)
+    totalCount = 0
+    #print(totalNo)
+    #Calculate the MTTC for each node on the attack path
+    harm.model.calcMTTC()
+    shuffle(harm.model.allpath)  
+    #harm.model.printPath()
+    #print("number of attack paths:", ) 
+    
+    totalTime = 0
+    security_failure = False
+    break_flag = False
+    for path in harm.model.allpath:
+        for node in path:
+            if node is not harm.model.s and node is not harm.model.e:
+                if node.val > 0 and node.comp == False:
+                    print(node.name, node.val, node.type)
+                    MTTC, flag = computeCompNodes(node, detect_pro) 
+                    totalTime += MTTC
+                    totalCount += 1
+                    
+                    print("Accumulated MTTC:", totalTime)
+                    if node.type == True:
+                        compNodes.append(node)
+                        assignCompNodeInNet(attack_net, node)
+                    ratioIDS = computeIDSRateMTTSF(detect_pro, compNodes, totalNo)
+
+                    #Exit inner loop 
+                    if ratioIDS >= cflag or flag == True:
+                        print("Failure condition: ", ratioIDS, flag)
+                        security_failure = True
+                        break_flag = True
+                        break
+
+        #Exit outer loop
+        if break_flag == True:
+            break
+       
+    return totalTime, compNodes, attack_net, security_failure
+
 def computeMTTSF_Interval(harm, net, decoy_net, interval_check, cflag, detect_pro, compNodes, security_failure):
     """
     Compute system security level for fixed interval shuffling.
@@ -335,9 +383,9 @@ def computeMTTSF_Interval(harm, net, decoy_net, interval_check, cflag, detect_pr
                     #print("Accumulated MTTC:", totalTime)
                     
                     if totalTime < interval_check:
-                    
-                        compNodes.append(node)
-                        assignCompNodeInNet(decoy_net, node)
+                        if node.type == True:
+                            compNodes.append(node)
+                            assignCompNodeInNet(decoy_net, node)
                         ratioIDS = computeIDSRateMTTSF(detect_pro, compNodes, totalNo)
                         #Exit inner loop 
                         if ratioIDS >= cflag or flag == True:
@@ -346,8 +394,9 @@ def computeMTTSF_Interval(harm, net, decoy_net, interval_check, cflag, detect_pr
                             break
                     elif totalTime == interval_check:
                         #Shuffle
-                        compNodes.append(node)
-                        assignCompNodeInNet(decoy_net, node)
+                        if node.type == True:
+                            compNodes.append(node)
+                            assignCompNodeInNet(decoy_net, node)
                         break_flag = True
                         ratioIDS = computeIDSRateMTTSF(detect_pro, compNodes, totalNo)
                         #End
@@ -401,9 +450,9 @@ def computeMTTSF_RandomInterval(harm, net, decoy_net, interval_mean, cflag, dete
                     interval_left = interval_check - previousTotalTime
                     #print("Accumulated MTTC:", totalTime)
                     if totalTime < interval_check:
-                    
-                        compNodes.append(node)
-                        assignCompNodeInNet(decoy_net, node)
+                        if node.type == True:
+                            compNodes.append(node)
+                            assignCompNodeInNet(decoy_net, node)
                         ratioIDS = computeIDSRateMTTSF(detect_pro, compNodes, totalNo)
                         #Exit inner loop
                         if ratioIDS >= cflag or flag == True:
@@ -412,8 +461,9 @@ def computeMTTSF_RandomInterval(harm, net, decoy_net, interval_mean, cflag, dete
                             break
                     elif totalTime == interval_check:
                         #Shuffle
-                        compNodes.append(node)
-                        assignCompNodeInNet(decoy_net, node)
+                        if node.type == True:
+                            compNodes.append(node)
+                            assignCompNodeInNet(decoy_net, node)
                         break_flag = True
                         ratioIDS = computeIDSRateMTTSF(detect_pro, compNodes, totalNo)
                         #End
@@ -434,49 +484,3 @@ def computeMTTSF_RandomInterval(harm, net, decoy_net, interval_mean, cflag, dete
             break
        
     return totalTime, compNodes, decoy_net, security_failure
-
-def computeMTTSF_Baseline(harm, net, attack_net, cflag, detect_pro, compNodes):
-    """
-    Compute system security level for baseline scheme.
-    """
-    totalNo = len(net.nodes)
-    totalCount = 0
-    #print(totalNo)
-    #Calculate the MTTC for each node on the attack path
-    harm.model.calcMTTC()
-    shuffle(harm.model.allpath)  
-    #harm.model.printPath()
-    #print("number of attack paths:", ) 
-    
-    totalTime = 0
-    security_failure = False
-    break_flag = False
-    for path in harm.model.allpath:
-        for node in path:
-            if node is not harm.model.s and node is not harm.model.e:
-                if node.val > 0 and node.comp == False:
-                    print(node.name, node.val)
-                    MTTC, flag = computeCompNodes(node, detect_pro) 
-                    totalTime += MTTC
-                    totalCount += 1
-                    
-                    print("Accumulated MTTC:", totalTime)
-                    compNodes.append(node)
-                    assignCompNodeInNet(attack_net, node)
-                    ratioIDS = computeIDSRateMTTSF(detect_pro, compNodes, totalNo)
-                    pro = uniform(0, 1)
-                    
-                    #Exit inner loop 
-                    if ratioIDS >= cflag or flag == True:
-                        print(ratioIDS, flag)
-                        security_failure = True
-                        break_flag = True
-                        break
-                    if pro < 0.5:
-                        #break_flag = True
-                        break
-        #Exit outer loop
-        if break_flag == True:
-            break
-       
-    return totalTime, compNodes, attack_net, security_failure

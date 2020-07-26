@@ -34,12 +34,12 @@ def add_conn(net):
         for conNode in temp: 
             connectOneWay(conNode, node)
     
-    """
+    
     #Add connections from VLAN2 to VLAN3
     for node in nodes_vlans[1]:
         for conNode in nodes_vlans[2]:
             connectOneWay(node, conNode)
-    """       
+          
     return None
 
 
