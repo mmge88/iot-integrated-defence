@@ -17,7 +17,7 @@ def travelPath(conNode, dserver, path, allpath, oriNode):
         #print(v.name)
         if v.inPath == 0: 
             
-            path.append(v.name) #Only append name
+            #path.append(v.name) #Only append name
             v.inPath = 1
 
             #Recursively traverse the path until to the decoy server
@@ -25,10 +25,10 @@ def travelPath(conNode, dserver, path, allpath, oriNode):
                 travelPath(v, dserver, path, allpath, oriNode)                            
             else:
                 oriNode.num += 1
-                oriNode.current_hop += len(path)
+                #oriNode.current_hop += len(path)
                 #allpath.append(path[:])
                 
-            path.pop()
+            #path.pop()
             v.inPath = 0
                
     return None
@@ -37,13 +37,13 @@ def travelNetAll(net, dserver):
     allpath = []
 
     for node1 in net.nodes:
-        node1.current_hop = 0
+        #node1.current_hop = 0
         node1.num = 0
         node1.inPath = 1
         path = [node1.name]
         travelPath(node1, dserver, path, allpath, node1) 
         node1.inPath = 0
-
+        del path
         #print(node1.name, node1.num)
     
     #print(allpath)
