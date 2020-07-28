@@ -122,8 +122,10 @@ def removeNodeWithMinAP(node):
             if flag == False:
                 val = conNode.num
                 name = conNode.name
+                flag = True
             else:
                 if conNode.num < val:
+                    val = conNode.num
                     name = conNode.name
         
     #print("Min AP:", name)
@@ -171,6 +173,7 @@ def heuristicShuffling(decoy_net, threshold_pro, out_degree):
                     disconnectOneWay(node1, node3)
                     cost += 1
             #print("new cons: ", getNameList(node1.con))
+            del decoys
     
     travelNetAll(shuffled_net, getDecoyServer(shuffled_net.nodes))
     
