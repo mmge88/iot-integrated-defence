@@ -37,14 +37,15 @@ def travelNetAll(net, dserver):
     allpath = []
 
     for node1 in net.nodes:
-        #node1.current_hop = 0
-        node1.num = 0
-        node1.inPath = 1
-        path = [node1.name]
-        travelPath(node1, dserver, path, allpath, node1) 
-        node1.inPath = 0
-        del path
-        #print(node1.name, node1.num)
+        if node1.type == True and node1.name.startswith("server") == False:
+             #node1.current_hop = 0
+             node1.num = 0
+             node1.inPath = 1
+             path = [node1.name]
+             travelPath(node1, dserver, path, allpath, node1) 
+             node1.inPath = 0
+             del path
+             #print(node1.name, node1.num)
     
     #print(allpath)
     return None
@@ -150,7 +151,7 @@ def getRealCon(node):
     #print(num)
     return num
 
-def heuristicShuffling(decoy_net, threshold_pro, out_degree):
+def heuristicShuffling(decoy_net, threshold_pro, out_degree, maxLength):
     """
     Real node type: True
     Decoy node type: emulated or real
@@ -179,7 +180,7 @@ def heuristicShuffling(decoy_net, threshold_pro, out_degree):
     
     dic = {}
     for node1 in shuffled_net.nodes:
-        if node1.name.startswith("server") == False and node1.name.find("decoy") < 0:
+        if node1.name.startswith("server") == False and node1.name.find("decoy") < 0 and node1.name.startswith("server") == False::
             dic[node1.name] = [node1.num, node1.hop]
             
     #print(dic)
@@ -212,7 +213,7 @@ def heuristicShuffling(decoy_net, threshold_pro, out_degree):
                         cost += 1
                     
                     #print("node2 in maxList:", node1.name, node2.name)
-                    if getRealCon(node1) <= out_degree:
+                    if getRealCon(node1) <= out_degree and node2.calcNodeHopsToTarget(0, 0) <= maxLength:
                         #print("Add connection for node1")
                         connectOneWay(node1, node2)
                         cost += 1
