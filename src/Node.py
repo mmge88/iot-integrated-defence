@@ -43,6 +43,24 @@ class node(object):
     #Check whether the node is leaf or not
     def isLeaf(self):
         return (len(self.con) is 1)
+    
+    def calcNodeHopsToTarget(self, hop, maxHop):
+        """
+        Calculate the maximum number of hops from the node to the target.
+        """
+        for con in self.con:
+            if con.inPath == 0:
+                con.inPath = 1
+                if con.name.startswith("server") == False:
+                    hop = con.calcNodeHopsToTarget(hop, maxHop)
+                else:
+                    hop += 1
+                
+                con.inPath = 0
+                if hop > maxHop:
+                    maxHop = hop
+                    
+        return hop
 
 
 class device(node):
