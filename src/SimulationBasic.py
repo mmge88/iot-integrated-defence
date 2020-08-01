@@ -405,7 +405,7 @@ def fixIntervalRS(initial_net, decoy_net, initial_info, interval, pro, packet):
     
     return mttsf, float(sum_ap)/float(i), float(defense_cost/mttsf), float(delivery_ratio/i)
 
-def fixIntervalHS(initial_net, decoy_net, initial_info, interval, pro, packet, thre):
+def fixIntervalHS(initial_net, decoy_net, initial_info, interval, pro, packet, thre, maxLength):
     
     i = 0
     compNodes = []
@@ -421,11 +421,11 @@ def fixIntervalHS(initial_net, decoy_net, initial_info, interval, pro, packet, t
     totalNodes = len(initial_net.nodes)
     out_degree = float(thre * totalNodes)
     print("Out degree threshold: ", out_degree)
-    decoy_net = randomAddReal(decoy_net, pro, out_degree)
+    decoy_net = randomAddReal(decoy_net, pro, out_degree, maxLength-1)
     
     while security_failure == False:
         #print("Shuffle time:",  i+1)
-        shuffled_net, cost = heuristicShuffling(decoy_net, pro, out_degree)
+        shuffled_net, cost = heuristicShuffling(decoy_net, pro, out_degree, maxLength-1)
         #print("Shuffled net:")
         #printNetWithVul(shuffled_net)
         newnet = copyNet(shuffled_net)
@@ -569,7 +569,7 @@ def randomIntervalRS(initial_net, decoy_net, initial_info, mean, pro, packet):
     
     return mttsf, float(sum_ap)/float(i), float(defense_cost/mttsf), float(delivery_ratio/i) 
 
-def randomIntervalHS(initial_net, decoy_net, initial_info, mean, pro, packet, thre):
+def randomIntervalHS(initial_net, decoy_net, initial_info, mean, pro, packet, thre, maxLength):
     
     i = 0
     compNodes = []
@@ -585,11 +585,11 @@ def randomIntervalHS(initial_net, decoy_net, initial_info, mean, pro, packet, th
     totalNodes = len(initial_net.nodes)
     out_degree = float(thre * totalNodes)
     print("Out degree threshold: ", out_degree)
-    decoy_net = randomAddReal(decoy_net, pro, out_degree)
+    decoy_net = randomAddReal(decoy_net, pro, out_degree, maxLength-1)
     
     while security_failure == False:
         #print("Shuffle time:",  i+1)
-        shuffled_net, cost = heuristicShuffling(decoy_net, pro, out_degree)
+        shuffled_net, cost = heuristicShuffling(decoy_net, pro, out_degree, maxLength-1)
         #print("Shuffled net:")
         #printNetWithVul(shuffled_net)
         newnet = copyNet(shuffled_net)
@@ -744,7 +744,7 @@ def adaptiveIntervalRS(initial_net, decoy_net, initial_info, pro, packet):
     
     return mttsf, float(sum_ap)/float(i), float(defense_cost/mttsf), float(delivery_ratio/i)
 
-def adaptiveIntervalHS(initial_net, decoy_net, initial_info, pro, packet, thre):
+def adaptiveIntervalHS(initial_net, decoy_net, initial_info, pro, packet, thre, maxLength):
 
     previous_ssl = 0
     compNodes = []
@@ -760,14 +760,14 @@ def adaptiveIntervalHS(initial_net, decoy_net, initial_info, pro, packet, thre):
     totalNodes = len(initial_net.nodes)
     out_degree = float(thre * totalNodes)
     print("Out degree threshold: ", out_degree)
-    decoy_net = randomAddReal(decoy_net, pro, out_degree)
+    decoy_net = randomAddReal(decoy_net, pro, out_degree, maxLength-1)
     
     #Attacker compromises nodes
     #Shuffle network when SSL check threshold is met 
     #Stop when either SF1 or SF2 or SSL threshold is met
 
     while previous_ssl <= initial_info["sslThreshold"]:
-        shuffled_net, cost = heuristicShuffling(decoy_net, pro, out_degree)
+        shuffled_net, cost = heuristicShuffling(decoy_net, pro, out_degree, maxLength-1)
         
         newnet = copyNet(shuffled_net)
         newnet = add_attacker(newnet)
