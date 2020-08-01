@@ -11,7 +11,7 @@ from decimal import *
 import RandomShufflingOptimization
 from Plots import *
 
-output_path = "path_to_result_folder"
+output_path = "path_to_result_folder/"
 processor_num = "number_of_processes"
 
 #-------------------------------------------------------------------------------------------------------
