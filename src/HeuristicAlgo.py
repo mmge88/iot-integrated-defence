@@ -180,7 +180,7 @@ def heuristicShuffling(decoy_net, threshold_pro, out_degree, maxLength):
     
     dic = {}
     for node1 in shuffled_net.nodes:
-        if node1.name.startswith("server") == False and node1.name.find("decoy") < 0 and node1.name.startswith("server") == False::
+        if node1.name.startswith("server") == False and node1.name.find("decoy") < 0:
             dic[node1.name] = [node1.num, node1.hop]
             
     #print(dic)
