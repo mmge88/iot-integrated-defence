@@ -155,11 +155,11 @@ def hybridInterval(node_vlan_list, initial_net, decoy_net, decoy_list, initial_i
 # How to shuffle: heuristic algorithm (DPNT)
 #------------------------------------------------------------------------------------------------------
 
-def heuShuffling(node_vlan_list, initial_net, decoy_net, decoy_list, initial_info, interval, pro, sim, packet, delay, thre):
+def heuShuffling(node_vlan_list, initial_net, decoy_net, decoy_list, initial_info, interval, pro, sim, packet, delay, thre, maxLen):
     
     #Fixed interval
     for i in range(0, sim):
-            mttsf, ave_ap, cost_hour, ratio = fixIntervalHS(initial_net, decoy_net, initial_info, interval, pro, packet, thre)
+            mttsf, ave_ap, cost_hour, ratio = fixIntervalHS(initial_net, decoy_net, initial_info, interval, pro, packet, thre, maxLen)
             if i == 0:
                 saveOutput('comparison/fixed_heu', 'w', [str(mttsf), str(ave_ap), str(cost_hour), str(ratio)], output_path)
             else:
@@ -168,7 +168,7 @@ def heuShuffling(node_vlan_list, initial_net, decoy_net, decoy_list, initial_inf
 
     #Random interval
     for i in range(0, sim):
-        mttsf, ave_ap, cost_hour, ratio = randomIntervalHS(initial_net, decoy_net, initial_info, mean, pro, packet, thre)
+        mttsf, ave_ap, cost_hour, ratio = randomIntervalHS(initial_net, decoy_net, initial_info, mean, pro, packet, thre, maxLen)
         if i == 0:
             saveOutput('comparison/random_heu', 'w', [str(mttsf), str(ave_ap), str(cost_hour), str(ratio)], output_path)
         else:
@@ -176,7 +176,7 @@ def heuShuffling(node_vlan_list, initial_net, decoy_net, decoy_list, initial_inf
   
     #Adaptive interval
     for i in range(0, sim):
-        mttsf, ave_ap, cost_hour, ratio = adaptiveIntervalHS(initial_net, decoy_net, initial_info, pro, packet, thre)
+        mttsf, ave_ap, cost_hour, ratio = adaptiveIntervalHS(initial_net, decoy_net, initial_info, pro, packet, thre, maxLen)
         if i == 0:
             saveOutput('comparison/adap_heu', 'w', [str(mttsf), str(ave_ap), str(cost_hour), str(ratio)], output_path)
         else:
@@ -184,7 +184,7 @@ def heuShuffling(node_vlan_list, initial_net, decoy_net, decoy_list, initial_inf
     
     #Hybrid interval
     for i in range(0, sim):
-        mttsf, ave_ap, cost_hour, ratio = hybridIntervalHS(initial_net, decoy_net, initial_info, pro, delay, packet, thre)
+        mttsf, ave_ap, cost_hour, ratio = hybridIntervalHS(initial_net, decoy_net, initial_info, pro, delay, packet, thre, maxLen)
         
         if i == 0:
             saveOutput('comparison/hybrid_heu', 'w', [str(mttsf), str(ave_ap), str(cost_hour), str(ratio)], output_path)
@@ -197,7 +197,7 @@ def heuShuffling(node_vlan_list, initial_net, decoy_net, decoy_list, initial_inf
 # Impact analysis on network size
 #------------------------------------------------------------------------------------------------------
 
-def scalabilityAnalysis(node_vlan_list, interval, pro, sim, delay, out_degree_ratio, scale):
+def scalabilityAnalysis(node_vlan_list, interval, pro, sim, delay, out_degree_ratio, scale, maxLen):
     decoy_num = {"ct":2, "camera":2, "tv":2, "server":1}
     
     initial_net, decoy_net, decoy_list, initial_info = beforeShuffleScale(node_vlan_list, decoy_num, varyAttackIntelligence(), 
@@ -206,7 +206,7 @@ def scalabilityAnalysis(node_vlan_list, interval, pro, sim, delay, out_degree_ra
 
 
     for i in range(0, sim):
-        mttsf, ave_ap, cost_hour, ratio = hybridIntervalHS(initial_net, decoy_net, initial_info, pro, delay, varyPacket(), out_degree_ratio)
+        mttsf, ave_ap, cost_hour, ratio = hybridIntervalHS(initial_net, decoy_net, initial_info, pro, delay, varyPacket(), out_degree_ratio, maxLen)
         if i == 0:
             saveOutput('scalability/hybrid_heu'+str(scale), 'w', [str(mttsf), str(ave_ap), str(cost_hour), str(ratio)], output_path)
         else:
@@ -250,12 +250,13 @@ if __name__ == '__main__':
     delay = 120.0 #For fixed interval in hybrid shuffling
     out_degree_ratio = 1.0
     scale = 2 #Set the number for real IoT devices (thermostat, meter, camera, tv, laptop)
+    maxLength = 5 #Set the maximum path length
     
     start = time.time()
 
     #randomShuffling(node_vlan_list, initial_net, decoy_net, decoy_list, initial_info, interval, pro, sim, varyPacket())
     
-    heuShuffling(node_vlan_list, initial_net, decoy_net, decoy_list, initial_info, interval, pro, sim, varyPacket(), delay, out_degree_ratio)
+    heuShuffling(node_vlan_list, initial_net, decoy_net, decoy_list, initial_info, interval, pro, sim, varyPacket(), delay, out_degree_ratio, maxLength)
     
     # GA shuffling using multiprocessing
     #fixedInterval(node_vlan_list, initial_net, decoy_net, decoy_list, initial_info, interval, pro, sim, varyPacket())
@@ -272,7 +273,7 @@ if __name__ == '__main__':
     """
     Scalability analysis
     """
-    #scalabilityAnalysis(node_vlan_list, interval, pro, sim, delay, out_degree_ratio, scale)
+    #scalabilityAnalysis(node_vlan_list, interval, pro, sim, delay, out_degree_ratio, scale, maxLength)
     
     """
     Plot results
