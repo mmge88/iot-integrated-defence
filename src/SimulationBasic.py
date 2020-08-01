@@ -931,7 +931,7 @@ def hybridIntervalRS(initial_net, decoy_net, initial_info, pro, delay, packet):
     return mttsf, float(sum_ap)/float(i), float(defense_cost/mttsf), float(delivery_ratio/i)
 
 
-def hybridIntervalHS(initial_net, decoy_net, initial_info, pro, delay, packet, thre):
+def hybridIntervalHS(initial_net, decoy_net, initial_info, pro, delay, packet, thre, maxLength):
 
     previous_ssl = 0
     compNodes = []
@@ -947,13 +947,13 @@ def hybridIntervalHS(initial_net, decoy_net, initial_info, pro, delay, packet, t
     totalNodes = len(initial_net.nodes)
     out_degree = float(thre * totalNodes)
     print("Out degree threshold: ", out_degree)
-    decoy_net = randomAddReal(decoy_net, pro, out_degree)
+    decoy_net = randomAddReal(decoy_net, pro, out_degree, maxLength-1)
     #Attacker compromises nodes
     #Shuffle network when SSL check threshold is met 
     #Stop when either SF1 or SF2 or SSL threshold is met
     
     while previous_ssl <= initial_info["sslThreshold"]:
-        shuffled_net, cost = heuristicShuffling(decoy_net, pro, out_degree)
+        shuffled_net, cost = heuristicShuffling(decoy_net, pro, out_degree, maxLength-1)
         
         newnet = copyNet(shuffled_net)
         newnet = add_attacker(newnet)
