@@ -421,7 +421,7 @@ def fixIntervalHS(initial_net, decoy_net, initial_info, interval, pro, packet, t
     totalNodes = len(initial_net.nodes)
     out_degree = float(thre * totalNodes)
     print("Out degree threshold: ", out_degree)
-    decoy_net = randomAddReal(decoy_net, pro, out_degree, maxLength-1)
+    decoy_net = randomAddReal(decoy_net, pro, out_degree, maxLength-1, totalNodes)
     
     while security_failure == False:
         #print("Shuffle time:",  i+1)
@@ -585,7 +585,7 @@ def randomIntervalHS(initial_net, decoy_net, initial_info, mean, pro, packet, th
     totalNodes = len(initial_net.nodes)
     out_degree = float(thre * totalNodes)
     print("Out degree threshold: ", out_degree)
-    decoy_net = randomAddReal(decoy_net, pro, out_degree, maxLength-1)
+    decoy_net = randomAddReal(decoy_net, pro, out_degree, maxLength-1, totalNodes)
     
     while security_failure == False:
         #print("Shuffle time:",  i+1)
@@ -760,7 +760,7 @@ def adaptiveIntervalHS(initial_net, decoy_net, initial_info, pro, packet, thre, 
     totalNodes = len(initial_net.nodes)
     out_degree = float(thre * totalNodes)
     print("Out degree threshold: ", out_degree)
-    decoy_net = randomAddReal(decoy_net, pro, out_degree, maxLength-1)
+    decoy_net = randomAddReal(decoy_net, pro, out_degree, maxLength-1, totalNodes)
     
     #Attacker compromises nodes
     #Shuffle network when SSL check threshold is met 
@@ -947,7 +947,7 @@ def hybridIntervalHS(initial_net, decoy_net, initial_info, pro, delay, packet, t
     totalNodes = len(initial_net.nodes)
     out_degree = float(thre * totalNodes)
     print("Out degree threshold: ", out_degree)
-    decoy_net = randomAddReal(decoy_net, pro, out_degree, maxLength-1)
+    decoy_net = randomAddReal(decoy_net, pro, out_degree, maxLength-1, totalNodes)
     #Attacker compromises nodes
     #Shuffle network when SSL check threshold is met 
     #Stop when either SF1 or SF2 or SSL threshold is met
