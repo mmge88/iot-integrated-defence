@@ -75,7 +75,7 @@ def randomAddReal(decoy_net, threshold_pro, out_degree, maxLength, totalNodes):
                     #Add or remove connection 
                     if random_pro > threshold_pro:
                         if checkConnection(node1, node2) == 0 and len(node1.con) <= out_degree and node2.calcNodeHopsToTarget(0, 0) <= maxLength:
-                            if totalNodes > 100:
+                            if totalNodes > 50:
                                 if node1.subnet != node2.subnet:
                                     #print("Connections", node1.name, node1.subnet, node2.name, node2.subnet)
                                     connectOneWay(node1, node2)
