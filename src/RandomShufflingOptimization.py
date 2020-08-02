@@ -61,7 +61,7 @@ def randomShuffling(decoy_net, threshold_pro):
     #print(cost)
     return shuffled_net, cost
 
-def randomAddReal(decoy_net, threshold_pro, out_degree, maxLength):
+def randomAddReal(decoy_net, threshold_pro, out_degree, maxLength, totalNodes):
 
     shuffled_net = copyNet(decoy_net)
 
@@ -75,6 +75,11 @@ def randomAddReal(decoy_net, threshold_pro, out_degree, maxLength):
                     #Add or remove connection 
                     if random_pro > threshold_pro:
                         if checkConnection(node1, node2) == 0 and len(node1.con) <= out_degree and node2.calcNodeHopsToTarget(0, 0) <= maxLength:
-                            connectOneWay(node1, node2)
+                            if totalNodes > 100:
+                                if node1.subnet != node2.subnet:
+                                    #print("Connections", node1.name, node1.subnet, node2.name, node2.subnet)
+                                    connectOneWay(node1, node2)
+                            else:
+                                connectOneWay(node1, node2)
     
     return shuffled_net
