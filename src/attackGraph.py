@@ -1,5 +1,6 @@
 """
 This module constructs attack graph.
+@author: Jin B. Hong
 """
 
 
