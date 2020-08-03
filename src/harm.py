@@ -1,5 +1,6 @@
 """
 This module constructs HARMs using AG, AT in both upper and lower layers.
+@co-authors: Jin B. Hong, Mengmeng Ge
 """
 
 
