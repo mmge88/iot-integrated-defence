@@ -213,10 +213,16 @@ def heuristicShuffling(decoy_net, threshold_pro, out_degree, maxLength):
                         cost += 1
                     
                     #print("node2 in maxList:", node1.name, node2.name)
-                    if getRealCon(node1) <= out_degree and node2.calcNodeHopsToTarget(0, 0) <= maxLength:
-                        #print("Add connection for node1")
-                        connectOneWay(node1, node2)
-                        cost += 1
+                    if getRealCon(node1) <= out_degree:
+                        if len(decoy_net.nodes) < 50:
+                            print("Add connection for node1")
+                            connectOneWay(node1, node2)
+                            cost += 1
+                        else:
+                            if node2.calcNodeHopsToTarget(0, 0) <= maxLength:
+                                print("Add connection for node1")
+                                connectOneWay(node1, node2)
+                                cost += 1
                 
         
     del maxList
