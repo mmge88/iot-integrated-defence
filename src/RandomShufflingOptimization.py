@@ -65,6 +65,19 @@ def randomAddReal(decoy_net, threshold_pro, out_degree, maxLength, totalNodes):
 
     shuffled_net = copyNet(decoy_net)
 
+    #Change connections from real IoT nodes to decoy nodes
+    for node1 in shuffled_net.nodes:
+        if node1.type == True and node1.name.startswith("server") == False:
+            for node2 in shuffled_net.nodes:
+                if node2.type == "emulated" or node2.type == "real":
+                    random_pro = uniform(0, 1)
+                    #Add or remove connection 
+                    if random_pro > threshold_pro:
+                        #print(node1.name, node2.name)
+                        #print("Add or remove connection based probability: ", random_pro, node1.name, node2.name)
+                        if checkConnection(node1, node2) == 0:
+                            connectOneWay(node1, node2)
+    
     #Add connections between real IoT nodes
     for node1 in shuffled_net.nodes:
         if node1.type == True and node1.name.startswith("server") == False:
@@ -73,13 +86,16 @@ def randomAddReal(decoy_net, threshold_pro, out_degree, maxLength, totalNodes):
                     #Add connection from node1 to node2 
                     random_pro = uniform(0, 1)
                     #Add or remove connection 
+                    #print("Max hop of node2:", node2.name, calcNodeHopsToTarget(node2, 0, 0))
                     if random_pro > threshold_pro:
-                        if checkConnection(node1, node2) == 0 and len(node1.con) <= out_degree and node2.calcNodeHopsToTarget(0, 0) <= maxLength:
+                        if checkConnection(node1, node2) == 0 and len(node1.con) <= out_degree:
                             if totalNodes > 50:
-                                if node1.subnet != node2.subnet:
-                                    #print("Connections", node1.name, node1.subnet, node2.name, node2.subnet)
+                                if node2.calcNodeHopsToTarget(0, 0) <= maxLength and node1.subnet != node2.subnet:
+                                    print("Connections", node1.name, node1.subnet, node2.name, node2.subnet)
                                     connectOneWay(node1, node2)
                             else:
                                 connectOneWay(node1, node2)
+                    else:
+                        disconnectOneWay(node1, node2)
     
     return shuffled_net
