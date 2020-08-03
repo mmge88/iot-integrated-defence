@@ -1,5 +1,6 @@
 """
 This module contains network object and relevant functions.
+@author: Mengmeng Ge
 """
 
 from Node import *
