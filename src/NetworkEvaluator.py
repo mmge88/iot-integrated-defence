@@ -1,5 +1,6 @@
 """
 This module conducts performance analysis.
+@author: Mengmeng Ge
 """
 
 from attackGraph import *
