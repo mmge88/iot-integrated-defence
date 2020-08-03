@@ -1,6 +1,6 @@
 """
 This module constructs attack tree.
-@author: Jin B. Hong, Mengmeng Ge
+@co-authors: Jin B. Hong, Mengmeng Ge
 """
 
 from Node import *
