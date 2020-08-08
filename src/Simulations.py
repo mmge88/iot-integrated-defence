@@ -10,6 +10,7 @@ import multiprocessing
 from decimal import *
 import RandomShufflingOptimization
 from Plots import *
+import os
 
 output_path = "path_to_result_folder/"
 processor_num = "number_of_processes"
@@ -215,6 +216,55 @@ def scalabilityAnalysis(node_vlan_list, interval, pro, sim, delay, out_degree_ra
     
     return None
 
+def runAndSave(initial_net, decoy_net, initial_info, pro, delay, packet, out_degree_ratio, maxLen, sim_id):
+    try:
+        obj = hybridIntervalHS(initial_net, decoy_net, initial_info, pro, delay, packet, out_degree_ratio, maxLen)
+        saveOutput2("comparison/multiprocess_hybrid_heu_sim_%s" % (sim_id), "w+", [str(i) for i in obj], output_path)
+        return None
+
+    except BaseException as err:
+        return "ERROR: %s" % (err)
+
+def scalabilityAnalysisOnMultiprocess(node_vlan_list, interval, pro, sim, delay, out_degree_ratio, scale, maxLen):
+    decoy_num = {"ct":2, "camera":2, "tv":2, "server":1}
+    
+    initial_net, decoy_net, decoy_list, initial_info = beforeShuffleScale2(node_vlan_list, decoy_num, varyAttackIntelligence(), 
+                                                                          varySSL(), varySSLDecrease(), scale)
+
+
+    pool = multiprocessing.Pool(processes = processor_num)
+    
+    results = [pool.apply_async(runAndSave, 
+                         args=(initial_net, decoy_net, initial_info, pro, delay, varyPacket(), out_degree_ratio, maxLen, sim_id)) for sim_id in range(0, sim)]
+        
+
+    pool.close()
+    pool.join()
+
+    # Print any errors during execution
+    for res in [x.get() for x in results]:
+        if res is not None:
+            print(res)
+        
+    lines = []
+    for sim_id in range(0, sim):
+        filepath = output_path + "comparison/multiprocess_hybrid_heu_sim_%s.txt" % (sim_id)
+        with open(filepath, "r") as f:
+            for line in f:
+                lines.append(line)
+
+    final_path = output_path + "comparison/multiprocess_hybrid_heu_%s.txt" % (scale)
+    with open(final_path, "w") as f:
+        for line in lines:
+            f.write(line)
+    
+
+    for sim_id in range(0, sim):
+        filepath = output_path + "comparison/multiprocess_hybrid_heu_sim_%s.txt" % (sim_id)
+        os.remove(filepath)
+    
+    return None
+
 #------------------------------------------------------------------------------------------------------
 # No defence
 #------------------------------------------------------------------------------------------------------
@@ -274,6 +324,7 @@ if __name__ == '__main__':
     Scalability analysis
     """
     #scalabilityAnalysis(node_vlan_list, interval, pro, sim, delay, out_degree_ratio, scale, maxLength)
+    #scalabilityAnalysisOnMultiprocess(node_vlan_list, interval, pro, sim, delay, out_degree_ratio, scale, maxLen)
     
     """
     Plot results
