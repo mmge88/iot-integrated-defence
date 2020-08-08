@@ -147,7 +147,7 @@ def hybridInterval(node_vlan_list, initial_net, decoy_net, decoy_list, initial_i
     #results = [r.get() for r in objects]
     #print(results)
     for r in objects:
-        saveOutput('comparison/adap_ga', 'a+', r.get(), output_path)
+        saveOutput('comparison/hybrid_ga', 'a+', r.get(), output_path)
     
     return None
 
