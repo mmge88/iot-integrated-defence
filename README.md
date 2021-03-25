@@ -1,4 +1,4 @@
-# IoT_IntegratedDefence
+# Integrated Defence for IoT
 
 The project proposes an integrated defence optimisation approach for IoT using network shuffling-based MTD and cyber deception.
 
