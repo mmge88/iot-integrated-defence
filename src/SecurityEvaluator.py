@@ -141,22 +141,21 @@ def modifyCompNodeInNet(decoy_net, attack_node, left_time):
 
 def computeIDSRateSSL(detect_pro, compNodes, totalNo, compNeighborNo, neighborNo):
     """
-    Introduce false positive and false negative into IDS.
+    Zero false positive and false negative by IDS.
     """
-    undetect_pro = 1.0 - detect_pro
-    dividend1 = detect_pro * len(compNodes) + undetect_pro * (totalNo - len(compNodes))
-    divisor1 = undetect_pro * len(compNodes) + detect_pro * (totalNo - len(compNodes))
+    dividend1 = len(compNodes)
+    divisor1 = totalNo
     value1 = dividend1/divisor1
     
-    dividend2 = detect_pro * compNeighborNo + undetect_pro * (neighborNo - compNeighborNo)
-    divisor2 = undetect_pro * compNeighborNo + detect_pro * (neighborNo - compNeighborNo)
+    dividend2 = compNeighborNo 
+    divisor2 = neighborNo
     value2 = dividend2/divisor2
     return value1, value2
     
 def computeIDSRateMTTSF(detect_pro, compNodes, totalNo):
-    undetect_pro = 1.0 - detect_pro
-    dividend = detect_pro * len(compNodes) + undetect_pro * (totalNo - len(compNodes))
-    divisor = undetect_pro * len(compNodes) + detect_pro * (totalNo - len(compNodes))
+   
+    dividend = len(compNodes) 
+    divisor = totalNo
     value = dividend/divisor   
     return value 
 
