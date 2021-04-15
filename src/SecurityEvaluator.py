@@ -1,5 +1,5 @@
 """
-This module conducts security analysis and generates SHARPE code from HARM as text file.
+This module conducts security analysis.
 
 @author: Mengmeng Ge
 """
